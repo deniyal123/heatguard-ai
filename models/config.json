@@ -1,0 +1,53 @@
+{
+  "project_name": "HeatGuard AI",
+  "disclaimer": "This prototype provides early-warning support and does not replace professional medical care.",
+  "is_synthetic_prototype": true,
+  "feature_order": [
+    "temperature",
+    "humidity",
+    "wbgt",
+    "age",
+    "activity",
+    "hydration",
+    "heart_rate",
+    "symptoms"
+  ],
+  "mappings": {
+    "activity": {
+      "Resting": 0,
+      "Moderate work": 1,
+      "Heavy work": 2
+    },
+    "hydration": {
+      "Good": 0,
+      "Uncertain": 1,
+      "Low": 2
+    },
+    "symptoms": {
+      "None": 0,
+      "Dizziness": 1,
+      "Headache": 2,
+      "Nausea": 3,
+      "Confusion": 4
+    }
+  },
+  "risk_classes": [
+    "Low risk",
+    "Moderate risk",
+    "High risk",
+    "Very high risk"
+  ],
+  "alert_templates": {
+    "Low risk": "Continue monitoring and drink water regularly.",
+    "Moderate risk": "Reduce exertion, rest periodically and move to a cooler area.",
+    "High risk": "Stop strenuous activity, move to shade, drink water and notify a supervisor.",
+    "Very high risk": "Stop activity and seek immediate assistance now."
+  },
+  "thresholds": {
+    "high_wbgt": 28.0,
+    "extreme_wbgt": 31.0,
+    "elevated_hr": 100,
+    "high_hr": 130,
+    "high_age": 60
+  }
+}

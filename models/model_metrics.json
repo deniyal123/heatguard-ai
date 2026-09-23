@@ -1,0 +1,108 @@
+{
+  "random_forest": {
+    "name": "Random Forest (Primary)",
+    "accuracy": 0.886,
+    "precision": 0.8861,
+    "recall": 0.886,
+    "confusion_matrix": [
+      [
+        114,
+        11,
+        0,
+        0
+      ],
+      [
+        8,
+        120,
+        4,
+        0
+      ],
+      [
+        0,
+        11,
+        73,
+        12
+      ],
+      [
+        0,
+        0,
+        11,
+        136
+      ]
+    ],
+    "feature_importances": {
+      "temperature": 0.1584,
+      "humidity": 0.0634,
+      "wbgt": 0.2328,
+      "age": 0.0413,
+      "activity": 0.0464,
+      "hydration": 0.0742,
+      "heart_rate": 0.2171,
+      "symptoms": 0.1664
+    }
+  },
+  "logistic_regression": {
+    "name": "Logistic Regression (Baseline)",
+    "accuracy": 0.892,
+    "precision": 0.8909,
+    "recall": 0.892,
+    "confusion_matrix": [
+      [
+        121,
+        4,
+        0,
+        0
+      ],
+      [
+        2,
+        128,
+        2,
+        0
+      ],
+      [
+        0,
+        8,
+        70,
+        18
+      ],
+      [
+        0,
+        0,
+        20,
+        127
+      ]
+    ]
+  },
+  "xgboost": {
+    "name": "XGBoost (Comparison)",
+    "accuracy": 0.898,
+    "precision": 0.8982,
+    "recall": 0.898,
+    "confusion_matrix": [
+      [
+        117,
+        8,
+        0,
+        0
+      ],
+      [
+        6,
+        123,
+        3,
+        0
+      ],
+      [
+        0,
+        7,
+        77,
+        12
+      ],
+      [
+        0,
+        0,
+        15,
+        132
+      ]
+    ]
+  }
+}

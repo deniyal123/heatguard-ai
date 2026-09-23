@@ -1,0 +1,57 @@
+[
+  {
+    "id": "pred_1789838662999_2s9e",
+    "risk": "High risk",
+    "probability": 54.6,
+    "contributingFactors": [
+      "High WBGT heat index (29.5°C)",
+      "Moderate physical activity",
+      "Uncertain hydration level"
+    ],
+    "alert": "Stop strenuous activity, move to shade, drink water and notify a supervisor.",
+    "timestamp": "2026-09-19T17:24:22.991505+00:00",
+    "disclaimer": "HeatGuard AI provides early-warning support and does not replace professional medical care.",
+    "isSyntheticPrototype": true,
+    "engine": "Python FastAPI ML Service (Random Forest)",
+    "inputs": {
+      "temperature": 34.2,
+      "humidity": 68,
+      "wbgt": 29.5,
+      "age": 32,
+      "activity": 1,
+      "hydration": 1,
+      "heartRate": 92,
+      "symptoms": 0
+    }
+  },
+  {
+    "id": "6aaecca2bb2a0e68f7441d8e",
+    "risk": "Very high risk",
+    "probability": 99.9,
+    "contributingFactors": [
+      "Extreme WBGT exposure (35.0°C)",
+      "Elevated ambient temperature (39.0°C)",
+      "High relative humidity (82.0%)",
+      "Severe tachycardia / High heart rate (145 BPM)",
+      "Heavy physical work / exertion",
+      "Low hydration status (Dehydration risk)",
+      "Reported symptom: Confusion",
+      "Age-related thermal vulnerability (68 yrs)"
+    ],
+    "alert": "Stop activity and seek immediate assistance now.",
+    "timestamp": "2026-09-19T17:55:46.946513+00:00",
+    "disclaimer": "HeatGuard AI provides early-warning support and does not replace professional medical care.",
+    "isSyntheticPrototype": true,
+    "engine": "Python FastAPI ML Service (Random Forest)",
+    "inputs": {
+      "temperature": 39,
+      "humidity": 82,
+      "wbgt": 35,
+      "age": 68,
+      "activity": 2,
+      "hydration": 2,
+      "heartRate": 145,
+      "symptoms": 4
+    }
+  }
+]
