@@ -1,27 +1,45 @@
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const { MongoClient } = require('mongodb');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
-const usePostgres = Boolean(process.env.DATABASE_URL);
+const mongoUri = process.env.MONGODB_URI;
+const postgresUrl = process.env.DATABASE_URL;
+const useMongo = Boolean(mongoUri);
+const usePostgres = !useMongo && Boolean(postgresUrl);
+
 const pool = usePostgres
   ? new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: postgresUrl,
       ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       max: 5
     })
   : null;
 
-const databaseReady = usePostgres
-  ? pool.query(`
+const mongoClient = useMongo ? new MongoClient(mongoUri) : null;
+let mongoCollection;
+
+const databaseReady = (async () => {
+  if (useMongo) {
+    await mongoClient.connect();
+    const mongoDb = mongoClient.db(process.env.MONGODB_DB || 'heatguard');
+    mongoCollection = mongoDb.collection('prediction_history');
+    await mongoCollection.createIndex({ timestamp: -1 });
+    return;
+  }
+
+  if (usePostgres) {
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS prediction_history (
         id TEXT PRIMARY KEY,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         record JSONB NOT NULL
       )
-    `)
-  : Promise.resolve();
+    `);
+  }
+})();
 
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -33,6 +51,10 @@ if (!fs.existsSync(HISTORY_FILE)) {
 
 async function getHistory(limit = 50) {
   await databaseReady;
+
+  if (useMongo) {
+    return mongoCollection.find({}).sort({ timestamp: -1 }).limit(limit).toArray();
+  }
 
   if (usePostgres) {
     const result = await pool.query(
@@ -60,6 +82,11 @@ async function savePrediction(prediction) {
     ...prediction
   };
 
+  if (useMongo) {
+    await mongoCollection.insertOne(record);
+    return record;
+  }
+
   if (usePostgres) {
     await pool.query(
       `INSERT INTO prediction_history (id, created_at, record)
@@ -84,6 +111,11 @@ async function savePrediction(prediction) {
 
 async function clearHistory() {
   await databaseReady;
+
+  if (useMongo) {
+    await mongoCollection.deleteMany({});
+    return true;
+  }
 
   if (usePostgres) {
     await pool.query('TRUNCATE TABLE prediction_history');
