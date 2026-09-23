@@ -3,8 +3,9 @@ services:
     name: heatguard-ai
     env: node
     plan: free
-    buildCommand: cd frontend && npm install && npm run build && cd ../node-backend && npm install
+    buildCommand: cd frontend && npm install --include=dev && npm run build && cd ../node-backend && npm install
     startCommand: node node-backend/server.js
     envVars:
       - key: NODE_ENV
         value: production
+
