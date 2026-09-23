@@ -194,14 +194,14 @@ router.post('/predict', async (req, res) => {
   result.inputs = payload;
 
   // 6. Save to local history DB
-  const savedRecord = db.savePrediction(result);
+  const savedRecord = await db.savePrediction(result);
 
   res.json(savedRecord);
 });
 
 // GET /api/history
-router.get('/history', (req, res) => {
-  const history = db.getHistory(50);
+router.get('/history', async (req, res) => {
+  const history = await db.getHistory(50);
   res.json({
     count: history.length,
     history
@@ -209,9 +209,10 @@ router.get('/history', (req, res) => {
 });
 
 // DELETE /api/history
-router.delete('/history', (req, res) => {
-  db.clearHistory();
+router.delete('/history', async (req, res) => {
+  await db.clearHistory();
   res.json({ message: 'Prediction history cleared.' });
 });
 
 module.exports = router;
+

@@ -1,20 +1,47 @@
 const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const HISTORY_FILE = path.join(DATA_DIR, 'history.json');
+const usePostgres = Boolean(process.env.DATABASE_URL);
+const pool = usePostgres
+  ? new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      max: 5
+    })
+  : null;
 
-// Ensure data directory exists
+const databaseReady = usePostgres
+  ? pool.query(`
+      CREATE TABLE IF NOT EXISTS prediction_history (
+        id TEXT PRIMARY KEY,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        record JSONB NOT NULL
+      )
+    `)
+  : Promise.resolve();
+
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
 
-// Initialize history file if missing
 if (!fs.existsSync(HISTORY_FILE)) {
   fs.writeFileSync(HISTORY_FILE, JSON.stringify([], null, 2));
 }
 
-function getHistory(limit = 50) {
+async function getHistory(limit = 50) {
+  await databaseReady;
+
+  if (usePostgres) {
+    const result = await pool.query(
+      'SELECT record FROM prediction_history ORDER BY created_at DESC LIMIT $1',
+      [limit]
+    );
+    return result.rows.map((row) => row.record);
+  }
+
   try {
     const raw = fs.readFileSync(HISTORY_FILE, 'utf-8');
     const history = JSON.parse(raw);
@@ -25,35 +52,49 @@ function getHistory(limit = 50) {
   }
 }
 
-function savePrediction(prediction) {
+async function savePrediction(prediction) {
+  await databaseReady;
+
+  const record = {
+    id: 'pred_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+    ...prediction
+  };
+
+  if (usePostgres) {
+    await pool.query(
+      `INSERT INTO prediction_history (id, created_at, record)
+       VALUES ($1, $2, $3)`,
+      [record.id, record.timestamp || new Date().toISOString(), record]
+    );
+    return record;
+  }
+
   try {
     const raw = fs.readFileSync(HISTORY_FILE, 'utf-8');
     const history = JSON.parse(raw);
-    
-    // Add unique ID and insert at beginning
-    const record = {
-      id: 'pred_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
-      ...prediction
-    };
-    
     history.unshift(record);
-    
-    // Keep max 100 history items
     const trimmed = history.slice(0, 100);
     fs.writeFileSync(HISTORY_FILE, JSON.stringify(trimmed, null, 2));
     return record;
   } catch (err) {
-    console.error('Error saving prediction to history:', err);
+    console.error('Error saving history:', err);
     return prediction;
   }
 }
 
-function clearHistory() {
+async function clearHistory() {
+  await databaseReady;
+
+  if (usePostgres) {
+    await pool.query('TRUNCATE TABLE prediction_history');
+    return true;
+  }
+
   try {
     fs.writeFileSync(HISTORY_FILE, JSON.stringify([], null, 2));
     return true;
   } catch (err) {
-    console.error('Error clearing history:', err);
+    console.error('Error clearing history file:', err);
     return false;
   }
 }
