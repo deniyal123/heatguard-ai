@@ -3,47 +3,37 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root { min-height: 100%; }
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: #f4f7fb;
     color: #10233f;
   }
+  @media (min-width: 768px) {
+    html, body, #root { height: 100%; overflow: hidden; }
+  }
 }
 
-:root {
-  --hg-navy: #10233f;
-  --hg-teal: #1eaa9a;
-  --hg-line: #e3eaf2;
-  --hg-muted: #718198;
-  --hg-canvas: #f4f7fb;
+:root { --hg-navy:#10233f; --hg-teal:#1eaa9a; --hg-line:#e3eaf2; --hg-muted:#718198; --hg-canvas:#f4f7fb; }
+
+.card-healthcare { background:rgba(255,255,255,.96); border:1px solid var(--hg-line); box-shadow:0 8px 24px rgba(16,35,63,.06); border-radius:1.1rem; }
+.card-healthcare-hover { transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease; }
+.card-healthcare-hover:hover { transform:translateY(-2px); border-color:#cbd8e6; box-shadow:0 14px 30px rgba(16,35,63,.1); }
+
+.risk-low-badge { background:#e8f8f2; color:#08745b; border:1px solid #b9ead9; }
+.risk-moderate-badge { background:#fff5dd; color:#9a6908; border:1px solid #f4d995; }
+.risk-high-badge,.risk-orange-badge { background:#fff0e7; color:#b45618; border:1px solid #f6c49e; }
+.risk-veryhigh-badge { background:#ffebed; color:#b13843; border:1px solid #f4b8be; }
+
+@keyframes meter-fill { from { width:0%; } }
+.animate-meter { animation:meter-fill .8s cubic-bezier(.16,1,.3,1) forwards; }
+@keyframes soft-pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
+.animate-soft-pulse { animation:soft-pulse 2s ease-in-out infinite; }
+
+input[type="range"] { accent-color:var(--hg-teal); }
+
+@media (min-width:768px) {
+  main::-webkit-scrollbar { width:8px; }
+  main::-webkit-scrollbar-track { background:transparent; }
+  main::-webkit-scrollbar-thumb { background:#cbd7e5; border-radius:999px; border:2px solid #f4f7fb; }
 }
-
-.card-healthcare {
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid var(--hg-line);
-  box-shadow: 0 8px 24px rgba(16, 35, 63, 0.06);
-  border-radius: 1.1rem;
-}
-
-.card-healthcare-hover {
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-
-.card-healthcare-hover:hover {
-  transform: translateY(-2px);
-  border-color: #cbd8e6;
-  box-shadow: 0 14px 30px rgba(16, 35, 63, 0.1);
-}
-
-.risk-low-badge { background-color:#e8f8f2; color:#08745b; border:1px solid #b9ead9; }
-.risk-moderate-badge { background-color:#fff5dd; color:#9a6908; border:1px solid #f4d995; }
-.risk-high-badge, .risk-orange-badge { background-color:#fff0e7; color:#b45618; border:1px solid #f6c49e; }
-.risk-veryhigh-badge { background-color:#ffebed; color:#b13843; border:1px solid #f4b8be; }
-
-@keyframes meter-fill { from { width: 0%; } }
-.animate-meter { animation: meter-fill .8s cubic-bezier(.16,1,.3,1) forwards; }
-
-@keyframes soft-pulse { 0%,100% { opacity:1; } 50% { opacity:.55; } }
-.animate-soft-pulse { animation: soft-pulse 2s ease-in-out infinite; }
-
-input[type="range"] { accent-color: var(--hg-teal); }
