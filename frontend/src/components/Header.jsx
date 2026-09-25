@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Clock, User, CheckCircle2, Sparkles, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Clock, Sparkles, Wifi, WifiOff } from 'lucide-react';
 
 export default function Header({ health }) {
   const [timeStr, setTimeStr] = useState('');
@@ -8,10 +8,7 @@ export default function Header({ health }) {
     const updateTime = () => {
       const now = new Date();
       setTimeStr(now.toLocaleDateString('en-US', {
-        weekday: 'short',
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
+        weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
       }) + ' • ' + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
     };
     updateTime();
@@ -22,41 +19,32 @@ export default function Header({ health }) {
   const isPythonOnline = health?.python_ml_status === 'online';
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 px-6 py-3.5 shadow-sm">
+    <header className="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-40 px-5 sm:px-7 py-3 shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        
-        {/* Mobile Title Logo (Visible on mobile/tablet) */}
-        <div className="flex items-center gap-2 md:hidden">
-          <div className="p-1.5 rounded-lg bg-teal-600 text-white">
+        <div className="flex items-center gap-3">
+          <div className="md:hidden p-2 rounded-xl bg-teal-600 text-white shadow-sm">
             <ShieldCheck className="w-5 h-5" />
           </div>
-          <span className="font-bold text-slate-900 text-base">HeatGuard AI</span>
+          <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <span className="font-mono">{timeStr}</span>
+          </div>
         </div>
 
-        {/* Date & Time */}
-        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 font-medium">
-          <Clock className="w-3.5 h-3.5 text-slate-400" />
-          <span className="font-mono">{timeStr}</span>
-        </div>
-
-        {/* Top Header Indicators */}
-        <div className="flex items-center gap-3">
-          
-          {/* Demo Mode Indicator */}
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-teal-50 border border-teal-200 text-teal-800 rounded-full text-xs font-semibold">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 border border-teal-100 text-teal-800 rounded-full text-[11px] font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-teal-600" />
-            <span>Demo Mode Active</span>
+            <span>Demo workspace</span>
           </div>
 
-          {/* System API Status */}
-          <div className="hidden md:flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-xs text-slate-600 font-medium">
-            <span className={`w-2 h-2 rounded-full ${isPythonOnline ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
-            <span>{isPythonOnline ? 'Random Forest ML Online' : 'Rules Engine Fallback'}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-full text-[11px] text-slate-600 font-medium">
+            {isPythonOnline ? <Wifi className="w-3.5 h-3.5 text-emerald-500" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}
+            <span className="hidden sm:inline">{isPythonOnline ? 'ML service online' : 'Rules fallback active'}</span>
+            <span className="sm:hidden">{isPythonOnline ? 'Online' : 'Fallback'}</span>
           </div>
 
-          {/* User Profile */}
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-            <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+          <div className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-slate-200">
+            <div className="w-9 h-9 rounded-xl bg-[#dce8ff] text-[#3b55a1] flex items-center justify-center font-bold text-xs shadow-sm">
               SJ
             </div>
             <div className="hidden lg:block text-left text-xs">
@@ -64,9 +52,7 @@ export default function Header({ health }) {
               <div className="text-[10px] text-slate-500">Safety Supervisor</div>
             </div>
           </div>
-
         </div>
-
       </div>
     </header>
   );
