@@ -183,18 +183,12 @@ export default function App() {
               </div>
             )}
 
-            {activeTab === 'monitoring' && <LiveTelemetry />}
             {activeTab === 'history' && <HistoryTable />}
+            {activeTab === 'monitoring' && <LiveTelemetry />}
             {activeTab === 'caregiver' && (
               <CaregiverHub onSendAlertSuccess={() => showToast('Caregiver emergency dispatch activated.', 'warning')} />
             )}
             {activeTab === 'settings' && <ModelMetricsView />}
-
-            {activeTab === 'assessment' && (
-              <div className="pt-4">
-                <HistoryTable />
-              </div>
-            )}
           </div>
         </main>
 
