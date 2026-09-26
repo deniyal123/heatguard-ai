@@ -1,20 +1,19 @@
 import React from 'react';
-import { ShieldAlert, Activity, History, Bell, Settings, ShieldCheck, ChevronRight, Sparkles } from 'lucide-react';
+import { ShieldAlert, History, ShieldCheck, ChevronRight, Sparkles } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
-    { id: 'assessment', label: 'Risk assessment', icon: ShieldAlert },
-    { id: 'monitoring', label: 'Live monitoring', icon: Activity },
+    { id: 'assessment', label: 'Risk management', icon: ShieldAlert },
     { id: 'history', label: 'Prediction history', icon: History },
-    { id: 'caregiver', label: 'Caregiver alerts', icon: Bell },
-    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   return (
     <aside className="w-64 h-screen overflow-hidden bg-[#10233f] text-slate-300 flex flex-col justify-between shrink-0 border-r border-[#1b3859]">
       <div>
         <div className="p-6 border-b border-white/10 flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-teal-400 text-[#10233f] shadow-lg shadow-teal-400/20"><ShieldCheck className="w-6 h-6" /></div>
+          <div className="p-2.5 rounded-xl bg-teal-400 text-[#10233f] shadow-lg shadow-teal-400/20">
+            <ShieldCheck className="w-6 h-6" />
+          </div>
           <div>
             <h1 className="text-lg font-bold text-white tracking-tight leading-none">HeatGuard AI</h1>
             <span className="text-[10px] text-teal-300 font-semibold tracking-wide">EARLY WARNING PLATFORM</span>
